@@ -1,11 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        a {
+            text-decoration: none;
+            color: #000000;
+        }
+    </style>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header">{{ __('Dashboard') }}</div>
+                    <div class="card-header"> {{ __('Dashboard') }}
+                        @can('role-list')
+                            |
+                            <a href="{{ route('role') }}"> {{ __('Role') }}</a>
+                        @endcan
+                        @can('role-list')
+                            |<a href="{{ route('permission') }}"> {{ __('Permission') }}</a>
+                        @endcan
+                    </div>
+
 
                     <div class="card-body">
                         @if (session('status'))
@@ -17,8 +32,8 @@
                             @can('user-create')
                                 <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm me-3">Tambah User</a>
                             @endcan
-                            @can('user-create')
-                                <a href="{{ route('role.permission') }}" class="btn btn-primary btn-sm">Tambah Permission
+                            @can('permission-list')
+                                <a href="{{ route('role') }}" class="btn btn-primary btn-sm">Tambah Permission
                                     pengguna</a>
                             @endcan
                             <thead>

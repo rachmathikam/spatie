@@ -67,7 +67,7 @@ class HomeController extends Controller
             'password'  => bcrypt($request->password),
         ]);
 
-        $role           = Role::where('name', $request->role)->first();
+        $role  = Role::where('name', $request->role)->first();
         $user->assignRole([$role->id]);
 
         if($user){
@@ -81,6 +81,7 @@ class HomeController extends Controller
         $roles = Role::where('name', '<>', 'admin')->get();
         $users = User::findOrFail($id);
         $roleNames = $users->roles->pluck('name')->toArray();
+        // dd($roleNames);
 
         return view('edit',compact('roles','users','roleNames'));
     }
@@ -99,7 +100,7 @@ class HomeController extends Controller
         $user->update([
             'name'  => $request->name,
             'email'     =>  $request->email,
-            'password'  => bcrypt($request->name),
+            'password'  => bcrypt($request->password),
         ]);
 
         $user->syncRoles($request->input('roles'));
@@ -128,13 +129,15 @@ class HomeController extends Controller
     }
 
     public function addPermissionToRole(Request $request){
-        $role           = Role::where('name', $request->role)->first();
-        $test = Permission::where('name',$request->permission)->select('id')->first();
-        $permissions    = Permission::where('id',$test->id)->first();
-        if($role->givePermissionTo([$permissions->id])){
-            return redirect()->route('home')->with('success','hak akses berhasil di tambah');
+        $role   = Role::where('name', $request->role)->first();
+        $test = Permission::whereIn('name',$request->permission)->select('id')->get();
+        foreach ($test as $value) {
+            $permissions  = Permission::where('id',$value->id)->first();
+            $role->givePermissionTo([$permissions->id]);
         }
-        // $user->assignRole([$role->id]);
+
+            return redirect()->route('home')->with('success','hak akses berhasil di tambah');
+
 
 
 

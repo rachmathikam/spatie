@@ -40,11 +40,7 @@
                             <label for="">Role</label>
                             <select name="roles" class="form-control">
                                 @foreach ($roles as $role)
-                                    {{ $selected = '' }}
-                                    @if ($role['name'] == $roleNames[0])
-                                        {{ $selected = 'selected' }}
-                                    @endif
-                                    <option {{ $selected }} value="{{ $role->name }}">
+                                    <option value="{{ $role->name }}">
                                         {{ $role->name }}
                                     </option>
                                 @endforeach
